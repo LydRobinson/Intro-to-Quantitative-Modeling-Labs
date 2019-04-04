@@ -1,0 +1,161 @@
+# Week 1: R basics 
+# BIOS 20151
+
+Lydia Robinson-Mailman
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the **Help** toolbar button for more details on using R Markdown).
+
+When you click the **Knit HTML** button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r fig.width=7, fig.height=6}
+plot(cars)
+```
+
+You can make text **bold** or *italic* like so. You can also use mathematical notation called LaTeX, which you'll see me use below to generate nice-looking equations. LaTeX commands are surrounded by dollar signs (for example $e^x$), but you don't need to learn it yourself for your own reports.
+
+
+
+## To prepare for this week's R review
+* Download R from https://cran.rstudio.com/ by choosing the R distribution compatible with your operating system, download and install R on your computer.
+* Download R Studio from https://www.rstudio.com/ide/download/desktop again choose the distribution built for your OS, download and install R Studio on your computer.
+* Read section 1.3 
+* Read section 2.3
+
+
+
+## Submitting:
+Submit this edited .Rmd file with your name in the title, through the R assignment 1 link on canvas before the deadline.
+
+
+## Grading:
+
+10 pts per question (3 pts for part 1, 7 pts for part 2)
+
+
+##  Computation using variables and plotting
+
+In the following tasks you will translate mathematical models into R commands and make the computer perform calculations. The first step is to give descriptive names to these variables (instead of single letters!), and then use these variables to calculate the predictions of the models.
+
+
+1. Take the model of a heart pumping with a constant rate, where $V_{tot}$ is the total volume of blood pumped by the heart over time, $V_s$ is the stroke volume, $R$ is the heart rate and $t$ is time:
+
+
+$$ 
+V_{tot} = V_sRt
+$$ 
+
+
+Calculate the volume of blood pumped by a heart beating at 80 beats per minute with stroke volume of 70 ml over 80 minutes (the length of one class) by creating variables for the stroke volume, heart rate, and time (come up with your own descriptive names). Perform the calculation and assign the result to a variable, then print out the answer.
+
+```{r}
+heart.rate <- 80
+stroke.volume <- 70
+time <- 80
+total.volume <- heart.rate*stroke.volume*time
+print(total.volume)
+```
+
+
+Plot the total blood pumped by the heart as a function of time by assigning time to be a vector from 0 to 80 minutes with step 1 minute and calculating a vector of values of volume, keeping the same values of stroke volume and heart rate. Print out the value of the 47th element of the vector. Plot the volume vs time using the type line with black line color and label your axes. Then change the heart rate to 120 beats per minute and overlay that plot on top of the previous one using the  lines() funcion with red line color. Based on the plots, describe what kind of function is this model, and what is the graphical difference between the two graphs.
+
+```{r}
+time.vec <- 0:80
+VEC.volume <- heart.rate*stroke.volume*time.vec
+print(VEC.volume)
+```
+
+# [1] 448000
+<!--  [1]      0   5600  11200  16800  22400  28000  33600  39200  44800  50400 -->
+<!-- [11]  56000  61600  67200  72800  78400  84000  89600  95200 100800 106400 -->
+<!-- [21] 112000 117600 123200 128800 134400 140000 145600 151200 156800 162400 -->
+<!-- [31] 168000 173600 179200 184800 190400 196000 201600 207200 212800 218400 -->
+<!-- [41] 224000 229600 235200 240800 246400 252000 257600 263200 268800 274400 -->
+<!-- [51] 280000 285600 291200 296800 302400 308000 313600 319200 324800 330400 -->
+<!-- [61] 336000 341600 347200 352800 358400 364000 369600 375200 380800 386400 -->
+<!-- [71] 392000 397600 403200 408800 414400 420000 425600 431200 436800 442400 -->
+<!-- [81] 448000 -->
+
+
+
+2. Take the model of the bacterial population that doubles every hour, where $P$ is the current population, $P_0$ is the initial population, and $t$ is the elapsed time:
+
+$$ 
+P = P_0 2^t
+$$
+
+Calculate the bacterial population after 3 days (think of the units of time!) if the initial population is a million by creating variables for the growth time and initial population. Perform the calculation and assign the result to a variable, then print out the answer. 
+
+```{r}
+initial.pop <- 1000000
+time <- 3*24
+final.pop <- initial.pop*(2^time)
+print(final.pop)
+```
+
+
+Plot the bacterial population as a function of time by assigning time as a vector from 0 to 3 days with step of 1 hour, and calculate a vector of values of population, starting with the same initial population. Print out the value of the 20th element of the vector. Plot the population vs time using the type line with black line color and label your axes. Then change the initial population to 2 million and overlay that plot on top of the previous one using the lines() function with red line color. Based on the plots, describe what kind of function is this model, and what is the graphical difference between the two graphs.
+
+```{r}
+time.vec <- 0:72
+VEC.pop <- initial.pop*(2^time.vec)
+print(VEC.pop[20])
+plot(time.vec,VEC.pop,
+      ylab = "Population",
+  xlab = "Time (hours)",
+  t='l')
+initial.pop2 <- 2000000
+VEC.pop.NEW <- initial.pop2*(2^time.vec)
+lines(time.vec,VEC.pop.NEW,t='l',col="red")
+
+```
+
+<!-- [1] 4.722366e+27 -->
+<!-- [1] 5.24288e+11 -->
+<!-- The model is an exponential function, where the funtion with initial population of 2 million starts rapidly increasing population within a shorter time fram than when the initial population was 1 million. -->
+
+3. The model for rate of an enzyme-catalyzed reaction, where $v$ is the rate of the reaction, $v_{max}$ is the maximum reaction rate, $K_M$ is the Michaelis constant, and $A$ is concentration of the substrate:
+$$
+v = \frac{v_{max} A}{K_M+A}
+$$
+
+
+Calculate the rate of the reaction given the substrate concentration of 1 mM, the maximum rate of 10 per second, and the Michaelis constant of 30 mM by creating variables for the substrate concentration, maximum reaction rate, the Michaelis constant. Perform the calculation and assign the result to a variable, then print out the answer.
+
+```{r}
+substrate.conc <- 1
+max.rate <- 10
+michaelis.constant <- 30
+reaction.rate <- (max.rate*substrate.conc)/(michaelis.constant+substrate.conc)
+print(reaction.rate)
+```
+
+
+Plot the reaction rate as a function of substrate concentration by assigning the substrate concentration to be a vector from 0 to 100 mM with step of 1 mM, and calculating a vector of reaction rates, keeping the same values for all the other variables. Print out the value of the 35th element of the vector. Plot the reaction rate vs concentration using the type line with black line color and label your axes. Based on the plot, at what value of concentration is the reaction rate equal to half of the maximum rate $v_{max}$? Change the Michaelis constant $K_M$ to be 60 mM and overlay that plot on top of the  previous one using the lines() function with red line color, and report at what concentration is the reaction rate one half of $v_{max}$. How is this value influenced by $K_M$?
+
+```{r}
+vec.substrate <- 0:100
+vec.rate <- (max.rate*vec.substrate)/(michaelis.constant+vec.substrate)
+print(vec.rate[35])
+plot(vec.substrate,vec.rate,
+     xlab = "Substrate Concenctration (mM)",
+     ylab = "Reaction Rate",
+     t='l')
+new.michaelis <- 60
+new.vec.rate <- (max.rate*vec.substrate)/(new.michaelis+vec.substrate)
+lines(vec.substrate,new.vec.rate, t='l', col= "red")
+print(vec.rate[31])
+print(new.vec.rate[61])
+
+```
+
+#[1] 0.3225806
+# When the Michaelis constant is 30, the reaction rate is half of the max rate at a substrate concentration of 31.
+# When the Michaelis constant is 60, the reaction rate is half of the max rate at a substrate concentration of 61.
+# This value increases with increase of the Michaelis constant. More specifically, according to these two trials, this value is one unit above what the max rate is set to.
+
